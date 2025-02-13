@@ -36,7 +36,7 @@ class Task(models.Model):
     )
 
     class Meta:
-        ordering = ["date"]
+        ordering = ["deadline"]
 
     def __str__(self):
         return f"{self.name} {self.deadline} {self.priority} {self.is_complete}"

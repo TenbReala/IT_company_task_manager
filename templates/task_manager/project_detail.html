@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<title>Project info</title>
+{% endblock %}
+
+{% block content %}
+	<h1>
+    Project information
+    <a href="{% url 'task_manager:project_create' %}" class="link-to-page">+</a>
+  </h1>
+  <p>Very big information</p>
+  <br>
+  <a href="{% url 'task_manager:project_delete' pk=project.id %}" class="btn btn-danger">Delete project</a>
+{% endblock %}
