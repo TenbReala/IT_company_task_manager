@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from task_manager.forms import WorkerCreationForm
-from task_manager.models import Worker, Task, Project, Team, Position
+from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
 
 @login_required
@@ -99,3 +99,26 @@ class PositionUpdateView(UpdateView):
 
 class PositionDeleteView(DeleteView):
     model = Position
+
+
+class TaskTypeListView(ListView):
+    model = TaskType
+
+
+class TaskTypeCreateView(CreateView):
+    model = TaskType
+    fields = "__all__"
+
+
+class TaskTypeDetailView(DetailView):
+    model = TaskType
+    queryset = TaskType.objects.all()
+
+
+class TaskTypeUpdateView(UpdateView):
+    model = TaskType
+    fields = "__all__"
+
+
+class TaskTypeDeleteView(DeleteView):
+    model = TaskType
