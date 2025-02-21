@@ -7,7 +7,7 @@
 {% block content %}
   <h1>
     My projects:
-    <a href="{% url "task_manager:project_create" %}" class="btm btm-primary link-to-page">+</a>
+    <a href="{% url "task_manager:project-create" %}" class="btm btm-primary link-to-page">+</a>
   </h1>
   <ul>
     {% for project in project_list %}

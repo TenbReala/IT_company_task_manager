@@ -52,14 +52,14 @@ class WorkerDeleteView(DeleteView):
 
 class ProjectsListView(ListView):
     model = Project
-    template_name = "task_manager/projects_list.html"
+    template_name = "task_manager/project_list.html"
 
 
 class ProjectsCreateView(CreateView):
     model = Project
     fields = "__all__"
-    template_name = "task_manager/projects_form.html"
-    success_url = reverse_lazy("task_manager:projects_list")
+    template_name = "task_manager/project_form.html"
+    success_url = reverse_lazy("task_manager:projects-list")
 
 
 class ProjectsDetailView(DetailView):
@@ -70,13 +70,13 @@ class ProjectsDetailView(DetailView):
 class ProjectsUpdateView(UpdateView):
     model = Project
     fields = "__all__"
-    template_name = "task_manager/projects_form.html"
-    success_url = reverse_lazy("task_manager:projects_list")
+    template_name = "task_manager/project_form.html"
+    success_url = reverse_lazy("task_manager:projects-list")
 
 
 class ProjectsDeleteView(DeleteView):
     model = Project
-    success_url = reverse_lazy("task_manager:projects_list")
+    success_url = reverse_lazy("task_manager:projects-list")
 
 
 class PositionListView(ListView):

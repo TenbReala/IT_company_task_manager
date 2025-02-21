@@ -8,10 +8,10 @@
 
   <br>
 
-  <li class="list-group-item"><a href="">Home</a></li>
+  <li class="list-group-item"><a href="{% url 'task_manager:index'  %}">Home</a></li>
   <li class="list-group-item"><a href="">My tasks</a></li>
   <p class="list-group-item">Project</p>
   {% for project in projects %}
-    <li class="list-group-item"><a href="">{{ project }}</a>
+    <li class="list-group-item"><a href="{% url 'task_manager:project-detail' pk=project.id %}">{{ project }}</a>
   {% endfor %}
 </ul>
