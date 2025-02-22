@@ -122,3 +122,46 @@ class TaskTypeUpdateView(UpdateView):
 
 class TaskTypeDeleteView(DeleteView):
     model = TaskType
+
+
+class TaskListView(ListView):
+    model = Task
+
+
+class TaskCreateView(CreateView):
+    model = Task
+    fields = "__all__"
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    queryset = Task.objects.all()
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    fields = "__all__"
+
+
+class TaskDeleteView(DeleteView):
+    model = Task
+
+
+class TeamListView(ListView):
+    pass
+
+
+class TeamCreateView(CreateView):
+    pass
+
+
+class TeamDetailView(DetailView):
+    pass
+
+
+class TeamUpdateView(UpdateView):
+    pass
+
+
+class TeamDeleteView(DeleteView):
+    pass
