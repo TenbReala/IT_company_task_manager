@@ -32,11 +32,18 @@ class Task(models.Model):
     assignees = models.ManyToManyField(
         "Worker",
         related_name="assignees",
+        blank=True,
+    )
+    project = models.ForeignKey(
+        "Project",
+        on_delete=models.CASCADE,
+        related_name="tasks",
+        null=True,
         blank=True
     )
 
     class Meta:
-        ordering = ["deadline"]
+        ordering = ["-deadline"]
 
     def __str__(self):
         return f"{self.name} {self.deadline} {self.priority} {self.is_complete}"
@@ -47,11 +54,6 @@ class Project(models.Model):
     description = models.TextField(
         max_length=500,
         blank=True,
-    )
-    tasks = models.ManyToManyField(
-        "Task",
-        related_name="projects",
-        blank=True
     )
 
     def __str__(self):
@@ -71,7 +73,7 @@ class Worker(AbstractUser):
         verbose_name_plural = "Workers"
 
     def __str__(self):
-        return f"{self.username}({self.first_name} {self.last_name}) {self.position}"
+        return f"{self.username}"
 
 
 class Position(models.Model):
@@ -88,10 +90,9 @@ class Team(models.Model):
         related_name="members",
         blank=True,
     )
-    projects = models.ForeignKey(
+    projects = models.ManyToManyField(
         "Project",
-        on_delete=models.CASCADE,
-        null=True,
+        related_name="teams",
         blank=True,
     )
 
