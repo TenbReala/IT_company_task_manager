@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
-from task_manager.forms import WorkerCreationForm
+from task_manager.forms import WorkerCreationForm, WorkerUpdateForm
 from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
 
@@ -33,11 +33,15 @@ class WorkerCreateView(CreateView):
 
 class WorkerListView(ListView):
     model = Worker
+    queryset = Worker.objects.all().prefetch_related("position")
 
 
 class WorkerUpdateView(UpdateView):
     model = Worker
-    form_class = WorkerCreationForm
+    form_class = WorkerUpdateForm
+
+    def get_success_url(self):
+        return reverse("task_manager:worker-detail", kwargs={"pk": self.object.pk})
 
 
 class WorkerDetailView(DetailView):
@@ -52,7 +56,7 @@ class WorkerDeleteView(DeleteView):
 
 class ProjectsListView(ListView):
     model = Project
-    template_name = "task_manager/project_list.html"
+    queryset = Project.objects.all().prefetch_related("teams")
 
 
 class ProjectsCreateView(CreateView):
@@ -64,7 +68,12 @@ class ProjectsCreateView(CreateView):
 
 class ProjectsDetailView(DetailView):
     model = Project
-    queryset = Project.objects.all().prefetch_related("tasks")
+    queryset = Project.objects.prefetch_related("tasks").all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["progress"] = self.object.progress()
+        return context
 
 
 class ProjectsUpdateView(UpdateView):
@@ -126,11 +135,24 @@ class TaskTypeDeleteView(DeleteView):
 
 class TaskListView(ListView):
     model = Task
+    queryset = Task.objects.all().prefetch_related("assignees")
 
 
 class TaskCreateView(CreateView):
     model = Task
     fields = "__all__"
+    success_url = reverse_lazy("task_manager:task-list")
+
+    def form_valid(self, form):
+        if not form.instance.project and self.kwargs.get("project_pk"):
+            form.istance.project = get_object_or_404(Project, pk=self.kwargs["project_pk"])
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.kwargs.get("project_pk"):
+            context["project_locked"] = True
+        return context
 
 
 class TaskDetailView(DetailView):
@@ -141,6 +163,7 @@ class TaskDetailView(DetailView):
 class TaskUpdateView(UpdateView):
     model = Task
     fields = "__all__"
+    success_url = reverse_lazy("task_manager:task-list")
 
 
 class TaskDeleteView(DeleteView):
@@ -148,20 +171,26 @@ class TaskDeleteView(DeleteView):
 
 
 class TeamListView(ListView):
-    pass
+    model = Team
+    queryset = Team.objects.all().prefetch_related("projects__teams")
 
 
 class TeamCreateView(CreateView):
-    pass
+    model = Team
+    fields = "__all__"
+    success_url = reverse_lazy("task_manager:team-list")
 
 
 class TeamDetailView(DetailView):
-    pass
+    model = Team
+    queryset = Team.objects.all().prefetch_related("projects__teams")
 
 
 class TeamUpdateView(UpdateView):
-    pass
+    model = Team
+    fields = "__all__"
 
 
 class TeamDeleteView(DeleteView):
-    pass
+    model = Team
+    success_url = reverse_lazy("task_manager:team-list")

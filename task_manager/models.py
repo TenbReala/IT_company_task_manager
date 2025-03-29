@@ -43,7 +43,7 @@ class Task(models.Model):
     )
 
     class Meta:
-        ordering = ["-deadline"]
+        ordering = ["is_complete"]
 
     def __str__(self):
         return f"{self.name} {self.deadline} {self.priority} {self.is_complete}"
@@ -55,6 +55,11 @@ class Project(models.Model):
         max_length=500,
         blank=True,
     )
+
+    def progress(self):
+        total_tasks = self.tasks.count()
+        completed_tasks = self.tasks.filter(is_complete=True).count()
+        return int((completed_tasks / total_tasks) * 100) if total_tasks > 0 else 0
 
     def __str__(self):
         return self.name

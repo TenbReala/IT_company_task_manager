@@ -49,6 +49,7 @@ urlpatterns = [
     path("projects/<int:pk>/detail/", ProjectsDetailView.as_view(), name="project-detail"),
     path("projects/<int:pk>/update/", ProjectsUpdateView.as_view(), name="project-update"),
     path("projects/<int:pk>/delete/", ProjectsDeleteView.as_view(), name="project-delete"),
+    path("projects/<int:project_pk>/tasks/create/", TaskCreateView.as_view(), name="project-task-create"),
 
     path("position/", PositionListView.as_view(), name="position-list"),
     path("position/create/", PositionCreateView.as_view(), name="position-create"),
