@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+	<title>Position</title>
+{% endblock %}
+
+{% block content %}
+	<h1>
+    Position
+    <a href="{% url 'task_manager:position-create' %}" class="btn btn-primary link-to-page">Create</a>
+  </h1>
+  <ul>
+    {% for position in position_list %}
+      <li>
+        <a href="{% url 'task_manager:position-detail' pk=position.id %}">
+          {{ position.name }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

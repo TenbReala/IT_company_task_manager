@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12 col-lg-10">
+        <div class="card">
+          <div class="card-header pb-0 p-3">
+            <div class="d-flex justify-content-between">
+              <h6 class="mb-2">Workers</h6>
+              <a href="{% url 'task_manager:worker-create' %}" class="text-sm text-primary">Add worker</a>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Function</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for worker in worker_list %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">
+                          <a href="{% url 'task_manager:worker-detail' pk=worker.id %}">{{ worker.username }}</a>
+                        </h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p class="text-sm text-secondary mb-0">{{ worker.position }}</p>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <p class="text-secondary mb-0 text-sm">{{ worker.email }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-secondary text-sm">{{ worker.id }}</span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+{#    {% include 'includes/footer.html' %}#}
+  </div>
+  
+{% endblock content %}
+  
+{% block extra_js %}
+  <script src="{% static 'assets/js/plugins/chartjs.min.js' %}"></script>
+{% endblock extra_js %}  

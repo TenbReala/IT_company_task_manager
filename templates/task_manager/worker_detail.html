@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+<div class="row">
+  <!-- [ sample-page ] start -->
+  <div class="col-lg-4">
+    <div class="card user-card user-card-1">
+      <div class="card-body pb-0">
+        <div class="media d-flex user-about-block align-items-center mt-0 mb-3">
+          <div class="media-body">
+            <h6 class="mb-1">
+              {{ worker.username }}
+            </h6>
+            <p class="mb-0 text-muted">{{ worker.position }}</p>
+          </div>
+        </div>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <span class="f-w-500"><i class="feather icon-mail m-r-10"></i>Email</span>
+          <a href="mailto:demo@sample" class="float-end link-to-page">{{ worker.email }}</a>
+        </li>
+      </ul>
+      <div class="nav flex-column nav-pills list-group list-group-flush list-pills mt-3" id="user-set-tab" role="tablist"
+        aria-orientation="vertical">
+        <a class="nav-link list-group-item list-group-item-action border-0"
+          href="{% url 'task_manager:worker-update' pk=worker.id %}">
+          <span class="f-w-500"><i class="feather icon-file-text m-r-10 h5 "></i>Edit Profile</span>
+          <span class="float-end"><i class="feather icon-chevron-right"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="tab-content bg-transparent p-0 shadow-none" id="user-set-tabContent">
+      <div class="tab-pane fade show active" id="user-set-profile" role="tabpanel"
+        aria-labelledby="user-set-profile-tab">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="feather icon-user text-c-blue wid-20"></i><span class="p-l-5">Personal Details</span>
+            </h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td class="">First Name</td>
+                  <td class="">:</td>
+                  <td class="">{{ worker.first_name }}</td>
+                </tr>
+                <tr>
+                  <td class="">Last Name</td>
+                  <td class="">:</td>
+                  <td class="">{{ worker.last_name }}{% if request.user.profile.city %}, {{request.user.profile.city}}{% endif %}{% if request.user.profile.country %}, {{request.user.profile.country}}{% endif %} </td>
+                </tr>
+                <tr>
+                  <td class="">Username</td>
+                  <td class="">:</td>
+                  <td class="">{{ worker.username }}</td>
+                </tr>
+                <tr>
+                  <td class="">Email</td>
+                  <td class="">:</td>
+                  <td class="">{{ worker.email }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Education -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- [ sample-page ] end -->
+</div>
+<!-- [ Main Content ] end -->
+</div>
+{% endblock content %}

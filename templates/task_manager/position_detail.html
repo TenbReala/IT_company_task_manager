@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<title>Detail</title>
+{% endblock %}
+
+{% block content %}
+  <h1>
+    {{ position.name }}
+    <a href="{% url 'task_manager:position-delete' pk=position.id %}" class="link-to-page btn btn-danger">Delete</a>
+    <a href="{% url 'task_manager:position-update' pk=position.id %}" class="link-to-page btn btn-primary">Edit</a>
+  </h1>
+  <ul>
+    {% for pos in position.worker_set.filter %}
+      {{ pos }}
+    {% endfor %}
+  </ul>
+{% endblock %}
