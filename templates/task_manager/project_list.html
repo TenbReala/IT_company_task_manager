@@ -5,15 +5,78 @@
 {% endblock %}
 
 {% block content %}
-  <h1>
-    My projects:
-    <a href="{% url "task_manager:project-create" %}" class="btm btm-primary link-to-page">+</a>
-  </h1>
-  <ul>
-    {% for project in project_list %}
-      <li><a href="">{{ project.name }}</a></li>
-    {% endfor %}
-  </ul>
+  <div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12 col-lg-10">
+          <div class="card">
+            <div class="card-header pb-0 p-3">
+              <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Projects table</h6>
+                <a href="{% url 'task_manager:project-create' %}" class="text-sm text-primary">Add project</a>
+              </div>
+
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Assigned to</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for project in project_list %}
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2">
+                          <div class="my-auto">
+                            <h6 class="mb-0 text-sm">
+                              <a href="{% url 'task_manager:project-detail' pk=project.id %}">{{ project.name }}</a>
+                            </h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <p class="text-sm font-weight-bold mb-0">{{ project.teams.all|join:", " }}</p>
+                      </td>
+                      <td>
+                        <span class="text-xs font-weight-bold">working</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <span class="me-2 text-xs font-weight-bold">{{ project.progress }}</span>
+                          <div>
+                            <div class="progress">
+                              <div 
+                                  class="progress-bar bg-gradient-info" role="progressbar"
+                                  style="width: {{ project.progress }}%;"
+                                  aria-valuenow="{{ project.progress }}" 
+                                  aria-valuemin="0" 
+                                  aria-valuemax="100">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle">
+                        <button class="btn btn-link text-secondary mb-0">
+                          <i class="fa fa-ellipsis-v text-xs"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
     
     
 {% endblock %}
