@@ -41,7 +41,32 @@
           <form method="post" id="confirmForm">
             {% csrf_token %}
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <button type="submit" class="btn btn-danger" id="confirm-submit-btn">Confirm</button>
+          </form>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="taskDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskModalTitle">Task title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+          <p id="taskModalDescription">Loading...</p>
+          <p class="text-muted"><small>Deadline: <span id="taskModalDeadline"></span></small></p>
+        </div>
+  
+        <div class="modal-footer">
+          <form method="post" id="task-complete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Mark as done</button>
           </form>
         </div>
   
@@ -72,12 +97,34 @@
         const button = event.relatedTarget;
         const message = button.getAttribute('data-message');
         const action = button.getAttribute('data-action');
+        const btnText = button.getAttribute('data-btn-text') || 'Confirm';
   
         const modalBody = confirmModal.querySelector('#modal-body-text');
         const confirmForm = confirmModal.querySelector('#confirmForm');
+        const confirmBtn = confirmModal.querySelector('#confirm-submit-btn');
   
         modalBody.textContent = message;
         confirmForm.action = action;
+        confirmBtn.textContent = btnText;
+      });
+    }
+  </script>
+
+  <script>
+    const taskModal = document.getElementById('taskDetailModal');
+    if (taskModal) {
+      taskModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+  
+        const title = button.getAttribute('data-task-title');
+        const description = button.getAttribute('data-task-description');
+        const deadline = button.getAttribute('data-task-deadline');
+        const url = button.getAttribute('data-task-url');
+  
+        taskModal.querySelector('#taskModalTitle').textContent = title;
+        taskModal.querySelector('#taskModalDescription').textContent = description;
+        taskModal.querySelector('#taskModalDeadline').textContent = deadline;
+        taskModal.querySelector('#task-complete-form').action = url;
       });
     }
   </script>
