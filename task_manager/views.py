@@ -1,7 +1,12 @@
+from datetime import timedelta
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Count
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.utils import timezone
+from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from task_manager.forms import WorkerCreationForm, WorkerUpdateForm
@@ -10,17 +15,29 @@ from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
 @login_required
 def index(request):
-    num_worker = Worker.objects.count()
-    num_tasks = Task.objects.count()
-    num_projects = Project.objects.count()
-    num_teams = Team.objects.count()
+    user = request.user
+
+    my_tasks = Task.objects.filter(assignees=user)
+    upcoming_tasks = my_tasks.filter(
+        deadline__gte=timezone.now(),
+        deadline__lte=timezone.now() + timedelta(days=7)
+    )
+
+    my_team = Team.objects.filter(members=request.user).first()
+    my_team_members = (
+        my_team.members.annotate(task_count=Count("assignees")) if my_team else []
+    )
+
+    projects = (
+        my_team.projects.all().prefetch_related("teams", "teams__members")
+        if my_team else Project.objects.none()
+    )
 
     context = {
-        "num_worker": num_worker,
-        "num_tasks": num_tasks,
-        "num_projects": num_projects,
-        "num_teams": num_teams,
-        "projects": Project.objects.all(),
+        "my_tasks": my_tasks[:5],
+        "upcoming_tasks": upcoming_tasks[:5],
+        "my_team": my_team_members,
+        "projects": projects
     }
 
     return render(request, "task_manager/index.html", context=context)
@@ -145,7 +162,7 @@ class TaskCreateView(CreateView):
 
     def form_valid(self, form):
         if not form.instance.project and self.kwargs.get("project_pk"):
-            form.istance.project = get_object_or_404(Project, pk=self.kwargs["project_pk"])
+            form.instance.project = get_object_or_404(Project, pk=self.kwargs["project_pk"])
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -168,6 +185,15 @@ class TaskUpdateView(UpdateView):
 
 class TaskDeleteView(DeleteView):
     model = Task
+
+
+class TaskCompleteView(View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+        if request.user in task.assignees.all():
+            task.is_complete = True
+            task.save()
+        return redirect("task_manager:index")
 
 
 class TeamListView(ListView):
