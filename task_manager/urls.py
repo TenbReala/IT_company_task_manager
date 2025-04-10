@@ -31,7 +31,8 @@ from task_manager.views import (
     TeamCreateView,
     TeamDetailView,
     TeamUpdateView,
-    TeamDeleteView
+    TeamDeleteView,
+    TaskCompleteView
 )
 
 urlpatterns = [
@@ -68,6 +69,7 @@ urlpatterns = [
     path("task/<int:pk>/detail/", TaskDetailView.as_view(), name="task-detail"),
     path("task/<int:pk>/update/", TaskUpdateView.as_view(), name="task-update"),
     path("task/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"),
+    path("task/<int:pk>/complete/", TaskCompleteView.as_view(), name="task-complete"),
 
     path("team/", TeamListView.as_view(), name="team-list"),
     path("team/create/", TeamCreateView.as_view(), name="team-create"),
