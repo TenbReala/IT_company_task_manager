@@ -17,7 +17,7 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Function</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Position</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Id</th>
                 </tr>
@@ -48,6 +48,9 @@
               </tbody>
             </table>
           </div>
+          {% block pagination %}
+            {% include "includes/pagination.html" %}
+          {% endblock %}
         </div>
       </div>
     </div>
