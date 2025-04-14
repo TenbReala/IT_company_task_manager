@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-6 mx-auto">
+      <div class="card">
+        <div class="card-header pb-0 p-3">
+          <h6 class="mb-0">Confirm Delete</h6>
+        </div>
+        <div class="card-body p-3">
+          <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete the position: <strong>{{ object.name }}</strong>?</p>
+            <a href="{% url 'task_manager:position-detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
