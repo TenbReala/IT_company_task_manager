@@ -109,6 +109,7 @@ class ProjectsDeleteView(DeleteView):
 
 class PositionListView(ListView):
     model = Position
+    queryset = Position.objects.all().prefetch_related("worker_set")
     paginate_by = 20
 
 
