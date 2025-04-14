@@ -51,6 +51,7 @@ class WorkerCreateView(CreateView):
 class WorkerListView(ListView):
     model = Worker
     queryset = Worker.objects.all().prefetch_related("position")
+    paginate_by = 20
 
 
 class WorkerUpdateView(UpdateView):
@@ -74,6 +75,7 @@ class WorkerDeleteView(DeleteView):
 class ProjectsListView(ListView):
     model = Project
     queryset = Project.objects.all().prefetch_related("teams")
+    paginate_by = 20
 
 
 class ProjectsCreateView(CreateView):
@@ -107,6 +109,7 @@ class ProjectsDeleteView(DeleteView):
 
 class PositionListView(ListView):
     model = Position
+    paginate_by = 20
 
 
 class PositionCreateView(CreateView):
@@ -129,6 +132,7 @@ class PositionDeleteView(DeleteView):
 
 class TaskTypeListView(ListView):
     model = TaskType
+    paginate_by = 20
 
 
 class TaskTypeCreateView(CreateView):
@@ -153,6 +157,7 @@ class TaskTypeDeleteView(DeleteView):
 class TaskListView(ListView):
     model = Task
     queryset = Task.objects.all().prefetch_related("assignees")
+    paginate_by = 20
 
 
 class TaskCreateView(CreateView):
@@ -199,6 +204,7 @@ class TaskCompleteView(View):
 class TeamListView(ListView):
     model = Team
     queryset = Team.objects.all().prefetch_related("projects__teams")
+    paginate_by = 20
 
 
 class TeamCreateView(CreateView):
