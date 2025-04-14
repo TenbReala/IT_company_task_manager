@@ -21,7 +21,10 @@
     {% block header %}
       {% include 'includes/navigation.html' %}
     {% endblock header %}
-    {% block content %}{% endblock content %}
+  
+    {% block content %}
+      {% block pagination %}{% endblock %}
+    {% endblock content %}
   </main>
   
   <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
