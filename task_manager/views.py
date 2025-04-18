@@ -136,25 +136,32 @@ class PositionDeleteView(DeleteView):
 class TaskTypeListView(ListView):
     model = TaskType
     paginate_by = 20
+    template_name = "task_manager/task_type_list.html"
 
 
 class TaskTypeCreateView(CreateView):
     model = TaskType
     fields = "__all__"
+    template_name = "task_manager/task_type_form.html"
+    success_url = reverse_lazy("task_manager:task-type-list")
 
 
 class TaskTypeDetailView(DetailView):
     model = TaskType
-    queryset = TaskType.objects.all()
+    queryset = TaskType.objects.prefetch_related("task_set")
+    template_name = "task_manager/task_type_detail.html"
 
 
 class TaskTypeUpdateView(UpdateView):
     model = TaskType
     fields = "__all__"
+    template_name = "task_manager/task_type_form.html"
+    success_url = reverse_lazy("task_manager:task-type-list")
 
 
 class TaskTypeDeleteView(DeleteView):
     model = TaskType
+    success_url = reverse_lazy("task_manager:task-type-list")
 
 
 class TaskListView(ListView):
