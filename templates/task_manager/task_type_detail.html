@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-lg-6 mx-auto">
+      <div class="card">
+        <div class="card-header pb-0 p-3">
+          <h6 class="mb-0">Task Type Detail</h6>
+        </div>
+        <div class="card-body p-3">
+          <p><strong>Name:</strong> {{ object.name }}</p>
+
+          <hr>
+          <h6 class="text-sm text-muted mb-2">Tasks of this type:</h6>
+          <ul class="list-group">
+            {% for task in object.task_set.all %}
+              <li class="list-group-item text-sm">
+                <a href="{% url 'task_manager:task-detail' task.pk %}" class="text-decoration-none">
+                  {{ task.name }} — {{ task.deadline }}
+                </a>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-sm text-muted">No tasks assigned to this type.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
