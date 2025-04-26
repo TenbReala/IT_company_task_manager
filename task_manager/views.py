@@ -2,14 +2,15 @@ from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views import View
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 
-from task_manager.forms import WorkerCreationForm, WorkerUpdateForm
+from task_manager.forms import WorkerCreationForm, WorkerUpdateForm, WorkerSearchForm, ProjectSearchForm, \
+    TaskSearchForm, TeamSearchForm
 from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
 
@@ -53,6 +54,23 @@ class WorkerListView(ListView):
     queryset = Worker.objects.all().prefetch_related("position")
     paginate_by = 20
 
+    def get_queryset(self):
+        queryset = Worker.objects.all().select_related("position")
+        query = self.request.GET.get("query")
+
+        if query:
+            queryset = queryset.filter(
+                Q(username__icontains=query) |
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = WorkerSearchForm(self.request.GET)
+        return context
+
 
 class WorkerUpdateView(UpdateView):
     model = Worker
@@ -76,6 +94,18 @@ class ProjectsListView(ListView):
     model = Project
     queryset = Project.objects.all().prefetch_related("teams")
     paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Project.objects.all().prefetch_related("teams")
+        query = self.request.GET.get("query")
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = ProjectSearchForm(self.request.GET)
+        return context
 
 
 class ProjectsCreateView(CreateView):
@@ -169,6 +199,18 @@ class TaskListView(ListView):
     queryset = Task.objects.all().prefetch_related("assignees")
     paginate_by = 20
 
+    def get_queryset(self):
+        queryset = Task.objects.all().prefetch_related("assignees")
+        query = self.request.GET.get("query")
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = TaskSearchForm(self.request.GET)
+        return context
+
 
 class TaskCreateView(CreateView):
     model = Task
@@ -215,6 +257,18 @@ class TeamListView(ListView):
     model = Team
     queryset = Team.objects.all().prefetch_related("projects__teams")
     paginate_by = 20
+
+    def get_queryset(self):
+        queryset = Team.objects.all().prefetch_related("projects__teams")
+        query = self.request.GET.get("query")
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = TeamSearchForm(self.request.GET)
+        return context
 
 
 class TeamCreateView(CreateView):
