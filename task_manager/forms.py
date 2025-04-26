@@ -22,3 +22,32 @@ class WorkerUpdateForm(forms.ModelForm):
     class Meta:
         model = Worker
         fields = ("username", "first_name", "last_name", "email", "position")
+
+
+class WorkerSearchForm(forms.Form):
+    query = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
+        "placeholder": "Search workers...",
+        "class": "form-control"
+    }))
+
+
+class TeamSearchForm(forms.Form):
+    query = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
+        "placeholder": "Search team...",
+        "class": "form-control"
+    }))
+
+
+class TaskSearchForm(forms.Form):
+    query = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
+        "placeholder": "Search task...",
+        "class": "form-control"
+    }))
+
+
+class ProjectSearchForm(forms.Form):
+    query = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
+        "placeholder": "Search project...",
+        "class": "form-control"
+    }))
+
