@@ -84,6 +84,7 @@
   {% include 'includes/scripts.html' %}
   {% block extra_js %}{% endblock extra_js %}
 
+  <!--
   <script src="{% static "assets/js/dark-theme.js" %}"></script>
   <script>
     if ('{{ request.user.profile.dark_mode }}' === 'True') {
@@ -92,6 +93,7 @@
       });
     }
   </script>
+  -->
 
   <script>
     const confirmModal = document.getElementById('confirmModal');
