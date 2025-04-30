@@ -67,7 +67,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "task_manager.context_processors.cfg_assets_root"
+                "task_manager.context_processors.cfg_assets_root",
             ],
         },
     },
@@ -110,6 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "task_manager.Worker"
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login/"
 
 
 # Internationalization
