@@ -45,26 +45,26 @@
               <table class="table align-items-center justify-content-center mb-0">
                 <thead>
                   <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Full name</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">ets</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">ets</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Full name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Position</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for tem in team.members.all %}
+                  {% for worker in team.members.all %}
                   <tr>
                     <td>
-                      <p class="text-sm font-weight-bold mb-0">{{ tem.first_name }} {{ tem.last_name }}</p>
+                      <p class="text-sm font-weight-bold mb-0">
+                        <a href="{% url 'task_manager:worker-detail' pk=worker.id %}">
+                          {{ worker.username }}
+                        </a>
+                      </p>
                     </td>
                     <td>
-                      <p class="text-sm font-weight-bold mb-0">{{ tem.username }}</p>
+                      <p class="text-sm font-weight-bold mb-0">{{ worker.first_name }} {{ worker.last_name }}</p>
                     </td>
                     <td>
-                      <p class="text-sm font-weight-bold mb-0">00:17:07</p>
-                    </td>
-                    <td>
-                      <p class="text-sm font-weight-bold mb-0">40.91%</p>
+                      <p class="text-sm font-weight-bold mb-0">{{ worker.position }}</p>
                     </td>
                   </tr>
                   {% endfor %}
