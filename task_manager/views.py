@@ -7,10 +7,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views import View
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.views.generic import (
+    CreateView,
+    ListView,
+    UpdateView,
+    DeleteView,
+    DetailView,
+)
 
-from task_manager.forms import WorkerCreationForm, WorkerUpdateForm, WorkerSearchForm, ProjectSearchForm, \
-    TaskSearchForm, TeamSearchForm
+from task_manager.forms import (
+    WorkerCreationForm,
+    WorkerUpdateForm,
+    WorkerSearchForm,
+    ProjectSearchForm,
+    TaskSearchForm,
+    TeamSearchForm,
+)
 from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
 
@@ -20,8 +32,7 @@ def index(request):
 
     my_tasks = Task.objects.filter(assignees=user)
     upcoming_tasks = my_tasks.filter(
-        deadline__gte=timezone.now(),
-        deadline__lte=timezone.now() + timedelta(days=7)
+        deadline__gte=timezone.now(), deadline__lte=timezone.now() + timedelta(days=7)
     )
 
     my_team = Team.objects.filter(members=request.user).first()
@@ -31,25 +42,27 @@ def index(request):
 
     projects = (
         my_team.projects.all().prefetch_related("teams", "teams__members")
-        if my_team else Project.objects.none()
+        if my_team
+        else Project.objects.none()
     )
 
     context = {
         "my_tasks": my_tasks[:5],
         "upcoming_tasks": upcoming_tasks[:5],
         "my_team": my_team_members,
-        "projects": projects
+        "projects": projects,
     }
 
     return render(request, "task_manager/index.html", context=context)
 
 
-class WorkerCreateView(CreateView):
+class WorkerCreateView(LoginRequiredMixin, CreateView):
     model = Worker
     form_class = WorkerCreationForm
+    template_name = "registration/registration.html"
 
 
-class WorkerListView(ListView):
+class WorkerListView(LoginRequiredMixin, ListView):
     model = Worker
     queryset = Worker.objects.all().prefetch_related("position")
     paginate_by = 20
@@ -60,9 +73,9 @@ class WorkerListView(ListView):
 
         if query:
             queryset = queryset.filter(
-                Q(username__icontains=query) |
-                Q(first_name__icontains=query) |
-                Q(last_name__icontains=query)
+                Q(username__icontains=query)
+                | Q(first_name__icontains=query)
+                | Q(last_name__icontains=query)
             )
         return queryset
 
@@ -72,7 +85,7 @@ class WorkerListView(ListView):
         return context
 
 
-class WorkerUpdateView(UpdateView):
+class WorkerUpdateView(LoginRequiredMixin, UpdateView):
     model = Worker
     form_class = WorkerUpdateForm
 
@@ -80,17 +93,21 @@ class WorkerUpdateView(UpdateView):
         return reverse("task_manager:worker-detail", kwargs={"pk": self.object.pk})
 
 
-class WorkerDetailView(DetailView):
+class WorkerDetailView(LoginRequiredMixin, DetailView):
     model = Worker
-    queryset = Worker.objects.all().prefetch_related("assignees__task_type").select_related("position")
+    queryset = (
+        Worker.objects.all()
+        .prefetch_related("assignees__task_type")
+        .select_related("position")
+    )
 
 
-class WorkerDeleteView(DeleteView):
+class WorkerDeleteView(LoginRequiredMixin, DeleteView):
     model = Worker
     success_url = reverse_lazy("")
 
 
-class ProjectsListView(ListView):
+class ProjectsListView(LoginRequiredMixin, ListView):
     model = Project
     queryset = Project.objects.all().prefetch_related("teams")
     paginate_by = 20
@@ -108,14 +125,16 @@ class ProjectsListView(ListView):
         return context
 
 
-class ProjectsCreateView(CreateView):
+class ProjectsCreateView(LoginRequiredMixin, CreateView):
     model = Project
     fields = "__all__"
     template_name = "task_manager/project_form.html"
-    success_url = reverse_lazy("task_manager:projects-list")
+
+    def get_success_url(self):
+        return reverse("task_manager:project-detail", kwargs={"pk": self.object.pk})
 
 
-class ProjectsDetailView(DetailView):
+class ProjectsDetailView(LoginRequiredMixin, DetailView):
     model = Project
     queryset = Project.objects.prefetch_related("tasks").all()
 
@@ -125,40 +144,40 @@ class ProjectsDetailView(DetailView):
         return context
 
 
-class ProjectsUpdateView(UpdateView):
+class ProjectsUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
     fields = "__all__"
     template_name = "task_manager/project_form.html"
     success_url = reverse_lazy("task_manager:projects-list")
 
 
-class ProjectsDeleteView(DeleteView):
+class ProjectsDeleteView(LoginRequiredMixin, DeleteView):
     model = Project
     success_url = reverse_lazy("task_manager:projects-list")
 
 
-class PositionListView(ListView):
+class PositionListView(LoginRequiredMixin, ListView):
     model = Position
     queryset = Position.objects.all().prefetch_related("worker_set")
     paginate_by = 20
 
 
-class PositionCreateView(CreateView):
+class PositionCreateView(LoginRequiredMixin, CreateView):
     model = Position
     fields = "__all__"
     success_url = reverse_lazy("task_manager:position-list")
 
 
-class PositionDetailView(DetailView):
+class PositionDetailView(LoginRequiredMixin, DetailView):
     model = Position
 
 
-class PositionUpdateView(UpdateView):
+class PositionUpdateView(LoginRequiredMixin, UpdateView):
     model = Position
     fields = "__all__"
 
 
-class PositionDeleteView(DeleteView):
+class PositionDeleteView(LoginRequiredMixin, DeleteView):
     model = Position
     success_url = reverse_lazy("task_manager:position-list")
 
@@ -169,7 +188,7 @@ class TaskTypeListView(ListView):
     template_name = "task_manager/task_type_list.html"
 
 
-class TaskTypeCreateView(CreateView):
+class TaskTypeCreateView(LoginRequiredMixin, CreateView):
     model = TaskType
     fields = "__all__"
     template_name = "task_manager/task_type_form.html"
@@ -182,19 +201,19 @@ class TaskTypeDetailView(DetailView):
     template_name = "task_manager/task_type_detail.html"
 
 
-class TaskTypeUpdateView(UpdateView):
+class TaskTypeUpdateView(LoginRequiredMixin, UpdateView):
     model = TaskType
     fields = "__all__"
     template_name = "task_manager/task_type_form.html"
     success_url = reverse_lazy("task_manager:task-type-list")
 
 
-class TaskTypeDeleteView(DeleteView):
+class TaskTypeDeleteView(LoginRequiredMixin, DeleteView):
     model = TaskType
     success_url = reverse_lazy("task_manager:task-type-list")
 
 
-class TaskListView(ListView):
+class TaskListView(LoginRequiredMixin, ListView):
     model = Task
     queryset = Task.objects.all().prefetch_related("assignees")
     paginate_by = 20
@@ -212,14 +231,16 @@ class TaskListView(ListView):
         return context
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     fields = "__all__"
     success_url = reverse_lazy("task_manager:task-list")
 
     def form_valid(self, form):
         if not form.instance.project and self.kwargs.get("project_pk"):
-            form.instance.project = get_object_or_404(Project, pk=self.kwargs["project_pk"])
+            form.instance.project = get_object_or_404(
+                Project, pk=self.kwargs["project_pk"]
+            )
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -229,22 +250,22 @@ class TaskCreateView(CreateView):
         return context
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     queryset = Task.objects.all()
 
 
-class TaskUpdateView(UpdateView):
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Task
     fields = "__all__"
     success_url = reverse_lazy("task_manager:task-list")
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
 
 
-class TaskCompleteView(View):
+class TaskCompleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         task = get_object_or_404(Task, pk=pk)
         if request.user in task.assignees.all():
@@ -253,7 +274,7 @@ class TaskCompleteView(View):
         return redirect("task_manager:index")
 
 
-class TeamListView(ListView):
+class TeamListView(LoginRequiredMixin, ListView):
     model = Team
     queryset = Team.objects.all().prefetch_related("projects__teams")
     paginate_by = 20
@@ -271,22 +292,22 @@ class TeamListView(ListView):
         return context
 
 
-class TeamCreateView(CreateView):
+class TeamCreateView(LoginRequiredMixin, CreateView):
     model = Team
     fields = "__all__"
     success_url = reverse_lazy("task_manager:team-list")
 
 
-class TeamDetailView(DetailView):
+class TeamDetailView(LoginRequiredMixin, DetailView):
     model = Team
     queryset = Team.objects.all().prefetch_related("projects__teams")
 
 
-class TeamUpdateView(UpdateView):
+class TeamUpdateView(LoginRequiredMixin, UpdateView):
     model = Team
     fields = "__all__"
 
 
-class TeamDeleteView(DeleteView):
+class TeamDeleteView(LoginRequiredMixin, DeleteView):
     model = Team
     success_url = reverse_lazy("task_manager:team-list")
