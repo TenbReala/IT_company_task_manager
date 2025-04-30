@@ -21,7 +21,7 @@ from task_manager.forms import (
     WorkerSearchForm,
     ProjectSearchForm,
     TaskSearchForm,
-    TeamSearchForm,
+    TeamSearchForm, TaskForm,
 )
 from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
@@ -233,7 +233,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("task_manager:task-list")
 
     def form_valid(self, form):

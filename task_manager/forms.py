@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from task_manager.models import Worker
+from task_manager.models import Worker, Task
 
 
 class WorkerCreationForm(UserCreationForm):
@@ -40,6 +40,21 @@ class TeamSearchForm(forms.Form):
             attrs={"placeholder": "Search team...", "class": "form-control"}
         ),
     )
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = "__all__"
+        widgets = {
+            "deadline": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "form-control"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        deadline = self.initial.get("deadline") or self.instance.deadline
+        if deadline:
+            self.initial["deadline"] = deadline.strftime("%Y-%m-%dT%H:%M")
 
 
 class TaskSearchForm(forms.Form):
