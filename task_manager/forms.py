@@ -56,10 +56,14 @@ class TaskForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        project_locked = kwargs.pop("project_locked", False)
         super().__init__(*args, **kwargs)
         deadline = self.initial.get("deadline") or self.instance.deadline
         if deadline:
             self.initial["deadline"] = deadline.strftime("%Y-%m-%dT%H:%M")
+
+        if project_locked:
+            self.fields.pop("project", None)
 
 
 class TaskSearchForm(forms.Form):

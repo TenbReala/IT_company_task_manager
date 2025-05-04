@@ -238,7 +238,16 @@ class TaskListView(LoginRequiredMixin, ListView):
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
-    success_url = reverse_lazy("task_manager:task-list")
+
+    def get_success_url(self):
+        if self.kwargs.get("project_pk"):
+            return reverse("task_manager:project-detail", args=[self.kwargs["project_pk"]])
+        return reverse("task_manager:task-list")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["project_locked"] = bool(self.kwargs.get("project_pk"))
+        return kwargs
 
     def form_valid(self, form):
         if not form.instance.project and self.kwargs.get("project_pk"):
@@ -251,6 +260,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         if self.kwargs.get("project_pk"):
             context["project_locked"] = True
+            context["project_pk"] = self.kwargs["project_pk"]
         return context
 
 

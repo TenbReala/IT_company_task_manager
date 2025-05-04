@@ -47,12 +47,14 @@
           {% endif %}
 
           <div class="row">
-            <div class="col-sm-6 mb-3">
-              <strong>Project:</strong><br>
-              <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">
-                {{ task.project.name }}
-              </a>
-            </div>
+            {% if task.project %}
+              <div class="col-sm-6 mb-3">
+                <strong>Project:</strong><br>
+                <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">
+                  {{ task.project.name }}
+                </a>
+              </div>
+            {% endif %}
             <div class="col-sm-6 mb-3">
               <strong>Assigned to:</strong><br>
               {% for worker in task.assignees.all %}
