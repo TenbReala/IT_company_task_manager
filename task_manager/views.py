@@ -56,10 +56,13 @@ def index(request):
     return render(request, "task_manager/index.html", context=context)
 
 
-class WorkerCreateView(LoginRequiredMixin, CreateView):
+class WorkerCreateView(CreateView):
     model = Worker
     form_class = WorkerCreationForm
     template_name = "registration/registration.html"
+
+    def get_success_url(self):
+        return reverse("task_manager:index")
 
 
 class WorkerListView(LoginRequiredMixin, ListView):
