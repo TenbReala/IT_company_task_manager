@@ -185,7 +185,7 @@ class PositionDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("task_manager:position-list")
 
 
-class TaskTypeListView(ListView):
+class TaskTypeListView(LoginRequiredMixin, ListView):
     model = TaskType
     paginate_by = 20
     template_name = "task_manager/task_type_list.html"
@@ -198,7 +198,7 @@ class TaskTypeCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("task_manager:task-type-list")
 
 
-class TaskTypeDetailView(DetailView):
+class TaskTypeDetailView(LoginRequiredMixin, DetailView):
     model = TaskType
     queryset = TaskType.objects.prefetch_related("task_set")
     template_name = "task_manager/task_type_detail.html"
@@ -214,6 +214,7 @@ class TaskTypeUpdateView(LoginRequiredMixin, UpdateView):
 class TaskTypeDeleteView(LoginRequiredMixin, DeleteView):
     model = TaskType
     success_url = reverse_lazy("task_manager:task-type-list")
+    template_name = "task_manager/task_type_confirm_delete.html"
 
 
 class TaskListView(LoginRequiredMixin, ListView):
