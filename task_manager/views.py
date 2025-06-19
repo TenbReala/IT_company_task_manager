@@ -278,6 +278,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
+    success_url = reverse_lazy("task_manager:task-list")
 
 
 class TaskCompleteView(LoginRequiredMixin, View):
