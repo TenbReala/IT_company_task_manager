@@ -323,6 +323,9 @@ class TeamUpdateView(LoginRequiredMixin, UpdateView):
     model = Team
     fields = "__all__"
 
+    def get_success_url(self):
+        return reverse("task_manager:team-detail", kwargs={"pk": self.object.pk})
+
 
 class TeamDeleteView(LoginRequiredMixin, DeleteView):
     model = Team
