@@ -178,6 +178,7 @@ class PositionDetailView(LoginRequiredMixin, DetailView):
 class PositionUpdateView(LoginRequiredMixin, UpdateView):
     model = Position
     fields = "__all__"
+    success_url = reverse_lazy("task_manager:position-list")
 
 
 class PositionDeleteView(LoginRequiredMixin, DeleteView):
