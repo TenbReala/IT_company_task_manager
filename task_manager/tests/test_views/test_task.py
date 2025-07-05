@@ -32,13 +32,17 @@ class TestTaskViews(TestCase):
         )
 
     def test_task_list_view_get_queryset(self):
-        response = self.client.get(reverse("task_manager:task-list"), {"query": "Done Task"})
+        response = self.client.get(
+            reverse("task_manager:task-list"), {"query": "Done Task"}
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Done Task")
         self.assertNotContains(response, "Task Two")
 
     def test_task_list_view_get_context_data(self):
-        response = self.client.get(reverse("task_manager:task-list"), {"query": "Done Task"})
+        response = self.client.get(
+            reverse("task_manager:task-list"), {"query": "Done Task"}
+        )
         self.assertIn("search_form", response.context)
         self.assertEqual(response.context["search_form"].data.get("query"), "Done Task")
 
@@ -69,7 +73,9 @@ class TestTaskViews(TestCase):
             "priority": "LOW",
         }
         response = self.client.post(url, data)
-        self.assertRedirects(response, reverse("task_manager:project-detail", args=[self.project1.id]))
+        self.assertRedirects(
+            response, reverse("task_manager:project-detail", args=[self.project1.id])
+        )
 
     def test_task_create_view_get_success_url_default(self):
         url = reverse("task_manager:task-create")
@@ -102,12 +108,15 @@ class TestTaskViews(TestCase):
             project=self.project1,
         )
         url = reverse("task_manager:task-update", args=[task.id])
-        response = self.client.post(url, {
-            "name": "Updated Name",
-            "deadline": self.deadline_str,
-            "task_type": self.task_type.id,
-            "priority": "LOW",
-        })
+        response = self.client.post(
+            url,
+            {
+                "name": "Updated Name",
+                "deadline": self.deadline_str,
+                "task_type": self.task_type.id,
+                "priority": "LOW",
+            },
+        )
         self.assertEqual(response.status_code, 302)
         task.refresh_from_db()
         self.assertEqual(task.name, "Updated Name")
@@ -130,7 +139,7 @@ class TestTaskViews(TestCase):
             deadline=self.deadline_obj,
             task_type=self.task_type,
             project=self.project1,
-            is_complete=False
+            is_complete=False,
         )
         task.assignees.add(self.user)
 
@@ -146,7 +155,7 @@ class TestTaskViews(TestCase):
             deadline=self.deadline_obj,
             task_type=self.task_type,
             project=self.project1,
-            is_complete=False
+            is_complete=False,
         )
         url = reverse("task_manager:task-complete", args=[task.pk])
         response = self.client.post(url)

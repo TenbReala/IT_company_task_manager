@@ -22,7 +22,9 @@ class TaskFormTest(TestCase):
         data = {
             "name": "Fix bug",
             "description": "Fix login bug",
-            "deadline": localtime(timezone.now() + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M"),
+            "deadline": localtime(timezone.now() + timedelta(days=1)).strftime(
+                "%Y-%m-%dT%H:%M"
+            ),
             "is_complete": False,
             "priority": Task.Priority.HIGH,
             "task_type": self.task_type.id,

@@ -44,9 +44,13 @@ class TestProjects(TestCase):
         self.assertContains(response, "Project_2")
 
     def test_listview_get_context_data(self):
-        response = self.client.get(reverse("task_manager:projects-list"), {"query": self.project1.name})
+        response = self.client.get(
+            reverse("task_manager:projects-list"), {"query": self.project1.name}
+        )
         self.assertIn("search_form", response.context)
-        self.assertEqual(response.context["search_form"].data.get("query"), self.project1.name)
+        self.assertEqual(
+            response.context["search_form"].data.get("query"), self.project1.name
+        )
         self.assertTrue(response.context["search_form"].is_bound)
 
     def test_update_view(self):
@@ -56,7 +60,9 @@ class TestProjects(TestCase):
         self.assertContains(response, self.project1.name)
 
     def test_detail_view_context_progress(self):
-        response = self.client.get(reverse("task_manager:project-detail", args=[self.project1.id]))
+        response = self.client.get(
+            reverse("task_manager:project-detail", args=[self.project1.id])
+        )
         self.assertEqual(response.status_code, 200)
         self.assertIn("progress", response.context)
         self.assertEqual(response.context["progress"], 50)
@@ -74,8 +80,3 @@ class TestProjects(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Project.objects.filter(id=self.project1.id).exists())
-
-
-
-
-

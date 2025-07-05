@@ -14,7 +14,9 @@ class TestLoginRequired(TestCase):
             task_type=self.task_type,
             deadline="2025-06-02T09:26:54.015362+00:00",
         )
-        self.project = Project.objects.create(name="Test project", )
+        self.project = Project.objects.create(
+            name="Test project",
+        )
         self.position = Position.objects.create(name="Test position")
         self.user = get_user_model().objects.create_user(
             username="testuser",
@@ -66,4 +68,6 @@ class TestLoginRequired(TestCase):
         self.client.force_login(self.user)
         for url in self.urls:
             response = self.client.get(url)
-            self.assertIn(response.status_code, [200, 302], msg=f"{url} = {response.status_code}")
+            self.assertIn(
+                response.status_code, [200, 302], msg=f"{url} = {response.status_code}"
+            )

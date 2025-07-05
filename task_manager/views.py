@@ -21,7 +21,8 @@ from task_manager.forms import (
     WorkerSearchForm,
     ProjectSearchForm,
     TaskSearchForm,
-    TeamSearchForm, TaskForm,
+    TeamSearchForm,
+    TaskForm,
 )
 from task_manager.models import Worker, Task, Project, Team, Position, TaskType
 
@@ -242,7 +243,9 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         if self.kwargs.get("project_pk"):
-            return reverse("task_manager:project-detail", args=[self.kwargs["project_pk"]])
+            return reverse(
+                "task_manager:project-detail", args=[self.kwargs["project_pk"]]
+            )
         return reverse("task_manager:task-list")
 
     def get_form_kwargs(self):

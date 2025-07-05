@@ -1,11 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from task_manager.forms import (
-    WorkerCreationForm,
-    WorkerUpdateForm,
-    WorkerSearchForm
-)
+from task_manager.forms import WorkerCreationForm, WorkerUpdateForm, WorkerSearchForm
 from task_manager.models import Position
 
 
@@ -80,4 +76,3 @@ class WorkerSearchFormTest(TestCase):
         query_field = form.fields["query"]
         self.assertEqual(query_field.widget.attrs["placeholder"], "Search workers...")
         self.assertIn("form-control", query_field.widget.attrs["class"])
-

@@ -24,7 +24,7 @@ class ProjectModelTest(TestCase):
             is_complete=True,
             priority=Task.Priority.HIGH,
             task_type=self.task_type,
-            project=self.project
+            project=self.project,
         )
         Task.objects.create(
             name="task2",
@@ -33,7 +33,7 @@ class ProjectModelTest(TestCase):
             is_complete=True,
             priority=Task.Priority.MEDIUM,
             task_type=self.task_type,
-            project=self.project
+            project=self.project,
         )
         Task.objects.create(
             name="task3",
@@ -42,7 +42,7 @@ class ProjectModelTest(TestCase):
             is_complete=True,
             priority=Task.Priority.LOW,
             task_type=self.task_type,
-            project=self.project
+            project=self.project,
         )
         Task.objects.create(
             name="task4",
@@ -51,6 +51,6 @@ class ProjectModelTest(TestCase):
             is_complete=False,
             priority=Task.Priority.LOW,
             task_type=self.task_type,
-            project=self.project
+            project=self.project,
         )
         self.assertEqual(self.project.progress(), 75)

@@ -19,7 +19,7 @@ class TestWorkerCreateView(TestCase):
             "username": "new_user",
             "password1": "StrongPass123!",
             "password2": "StrongPass123!",
-            "position": self.position.id
+            "position": self.position.id,
         }
         response = self.client.post(self.create_url, data)
         self.assertEqual(response.status_code, 302)
@@ -30,7 +30,7 @@ class TestWorkerCreateView(TestCase):
             "username": "bad_user",
             "password1": "123",
             "password2": "321",
-            "position": self.position.id
+            "position": self.position.id,
         }
         response = self.client.post(self.create_url, data)
         self.assertEqual(response.status_code, 200)
@@ -72,8 +72,9 @@ class TestWorkerListView(TestCase):
             self.assertNotIn(self.unmatched_user, workers)
 
     def test_get_context_data(self):
-        response = self.client.get(reverse("task_manager:worker-list"), {"query": "test"})
+        response = self.client.get(
+            reverse("task_manager:worker-list"), {"query": "test"}
+        )
         self.assertIn("search_form", response.context)
         self.assertEqual(response.context["search_form"].data.get("query"), "test")
         self.assertTrue(response.context["search_form"].is_bound)
-

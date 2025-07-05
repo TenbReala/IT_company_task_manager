@@ -22,7 +22,9 @@ class TestTaskTypeViews(TestCase):
         self.assertContains(response, self.task_type.name)
 
     def test_task_type_create_view(self):
-        response = self.client.post(reverse("task_manager:task-type-create"), {"name": "New Type"})
+        response = self.client.post(
+            reverse("task_manager:task-type-create"), {"name": "New Type"}
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(TaskType.objects.filter(name="New Type").exists())
 

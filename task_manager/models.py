@@ -6,7 +6,7 @@ class TaskType(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -38,11 +38,7 @@ class Task(models.Model):
         blank=True,
     )
     project = models.ForeignKey(
-        "Project",
-        on_delete=models.CASCADE,
-        related_name="tasks",
-        null=True,
-        blank=True
+        "Project", on_delete=models.CASCADE, related_name="tasks", null=True, blank=True
     )
 
     class Meta:
@@ -112,7 +108,7 @@ class Team(models.Model):
     )
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
