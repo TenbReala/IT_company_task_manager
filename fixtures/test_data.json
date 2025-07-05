@@ -400,7 +400,7 @@
       "position": 122669006,
       "password": "pbkdf2_sha256$870000$6OzOyIjKo2JPSjAplKjIC6$1fBSNEEBXhnKNodlUQhY0rYbDLy3nEgRmdp7ZDutm7E=",
       "is_active": true,
-      "is_staff": false,
+      "is_staff": true,
       "is_superuser": false,
       "last_login": null,
       "date_joined": "2025-05-04T09:26:54.011772+00:00"

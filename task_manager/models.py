@@ -5,6 +5,9 @@ from django.db import models
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -56,6 +59,9 @@ class Project(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ["name"]
+
     def progress(self):
         total_tasks = self.tasks.count()
         completed_tasks = self.tasks.filter(is_complete=True).count()
@@ -76,6 +82,7 @@ class Worker(AbstractUser):
     class Meta:
         verbose_name = "Worker"
         verbose_name_plural = "Workers"
+        ordering = ["username"]
 
     def __str__(self):
         return f"{self.username}"
@@ -83,6 +90,9 @@ class Worker(AbstractUser):
 
 class Position(models.Model):
     name = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -100,6 +110,9 @@ class Team(models.Model):
         related_name="teams",
         blank=True,
     )
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name
