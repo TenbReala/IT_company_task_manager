@@ -393,7 +393,7 @@
     "model": "task_manager.worker",
     "pk": 81228463,
     "fields": {
-      "username": "anna_olson",
+      "username": "test",
       "first_name": "Anna",
       "last_name": "Olson",
       "email": "anna_olson@example.com",
