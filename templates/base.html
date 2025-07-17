@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  {% block title %}
+  	<title>index</title>
+  {% endblock %}
+  {% include 'includes/head.html' %}
+  {% block extrahead %}{% endblock extrahead %}
+  {% block extrastyle %}{% endblock extrastyle %}
+</head>
+
+<body class="g-sidenav-show bg-gray-100 {% block body %}{% endblock body %}">
+
+  {% block sidebar %}
+    {% include 'includes/sidebar.html' %}
+  {% endblock sidebar %}
+
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    {% block header %}
+      {% include 'includes/navigation.html' %}
+    {% endblock header %}
+  
+    {% block content %}
+      {% block pagination %}{% endblock %}
+    {% endblock content %}
+  </main>
+  
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmModalLabel">Confirm action</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body" id="modal-body-text">
+          Are you sure?
+        </div>
+  
+        <div class="modal-footer">
+          <form method="post" id="confirmForm">
+            {% csrf_token %}
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger" id="confirm-submit-btn">Confirm</button>
+          </form>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="taskDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskModalTitle">Task title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+  
+        <div class="modal-body">
+          <p id="taskModalDescription">Loading...</p>
+          <p class="text-muted"><small>Deadline: <span id="taskModalDeadline"></span></small></p>
+        </div>
+  
+        <div class="modal-footer">
+          <form method="post" id="task-complete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Mark as done</button>
+          </form>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+  {% block fixed_plugin %}
+    {% include 'includes/fixed-plugin.html' %}
+  {% endblock fixed_plugin %}
+
+  {% include 'includes/scripts.html' %}
+  {% block extra_js %}{% endblock extra_js %}
+
+  <!--
+  <script src="{% static "assets/js/dark-theme.js" %}"></script>
+  <script>
+    if ('{{ request.user.profile.dark_mode }}' === 'True') {
+      document.addEventListener('DOMContentLoaded', function() {
+        initialDarkMode();
+      });
+    }
+  </script>
+  -->
+
+  <script>
+    const confirmModal = document.getElementById('confirmModal');
+    if (confirmModal) {
+      confirmModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const message = button.getAttribute('data-message');
+        const action = button.getAttribute('data-action');
+        const btnText = button.getAttribute('data-btn-text') || 'Confirm';
+  
+        const modalBody = confirmModal.querySelector('#modal-body-text');
+        const confirmForm = confirmModal.querySelector('#confirmForm');
+        const confirmBtn = confirmModal.querySelector('#confirm-submit-btn');
+  
+        modalBody.textContent = message;
+        confirmForm.action = action;
+        confirmBtn.textContent = btnText;
+      });
+    }
+  </script>
+
+  <script>
+    const taskModal = document.getElementById('taskDetailModal');
+    if (taskModal) {
+      taskModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+  
+        const title = button.getAttribute('data-task-title');
+        const description = button.getAttribute('data-task-description');
+        const deadline = button.getAttribute('data-task-deadline');
+        const url = button.getAttribute('data-task-url');
+  
+        taskModal.querySelector('#taskModalTitle').textContent = title;
+        taskModal.querySelector('#taskModalDescription').textContent = description;
+        taskModal.querySelector('#taskModalDeadline').textContent = deadline;
+        taskModal.querySelector('#task-complete-form').action = url;
+      });
+    }
+  </script>
+  
+
+</body>
+</html>

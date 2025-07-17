@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+  <title>{{ object|yesno:"Update,Create" }} task</title>
+{% endblock %}
+
+{% block content %}
+  <h1>{{ object|yesno:"Update,Create" }} task</h1>
+  <form action="" method="post" novalidate>
+    {% csrf_token %}
+
+    {% if project_locked %}
+      <input type="hidden" name="project" value="{{ project_pk }}">
+      {% for field in form %}
+        {% if field.name != 'project' %}
+          {{ field|as_crispy_field }}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {{ form|crispy }}
+    {% endif %}
+
+    <input type="submit" value="Submit" class="btn btn-primary">
+    <a href="{% url 'task_manager:task-list' %}" class="btn btn-danger">Back</a>
+  </form>
+{% endblock %}

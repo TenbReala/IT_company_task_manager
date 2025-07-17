@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<title>Tasks</title>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12 col-lg-10">
+          <form method="get" action="" class="mb-4">
+            <div class="input-group input-group-lg">
+              <input 
+                type="text" 
+                name="query" 
+                class="form-control" 
+                placeholder="Search tasks by name..." 
+                value="{{ request.GET.query }}"
+                style="height: 48px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+              <button 
+                class="btn bg-gradient-primary px-4 d-flex align-items-center justify-content-center" 
+                type="submit" 
+                style="height: 48px; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                Search
+              </button>
+            </div>
+          </form>
+        <div class="card">
+          <div class="card-header pb-0 p-3">
+            <div class="d-flex justify-content-between">
+              <h6 class="mb-2">Tasks</h6>
+              <a href="{% url 'task_manager:task-create' %}" class="text-sm text-primary">Add task</a>
+            </div>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Deadline</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Priority</th>
+                    <th class="text-uppercase text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Assignees</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for task in task_list %}
+                  <tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6>
+                              <a href="{% url 'task_manager:task-detail' pk=task.id %}" class="mb-0 text-sm">
+                                {{ task.name }}
+                              </a>
+                          </h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">{{ task.deadline }}</p>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                      <span class="badge badge-sm {% if task.is_complete %} bg-gradient-success {% else %} bg-gradient-danger {% endif %}">
+                        {% if task.is_complete %}Complete{% else %}In progres{% endif %}
+                      </span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">{{ task.priority }}</span>
+                    </td>
+                    <td class="align-middle text-sm">
+                        {% for assign in task.assignees.all %}
+                          <a class="ps-4" href="{% url 'task_manager:worker-detail' pk=assign.id %}">{{ assign.username }}</a>
+                        {% endfor %}
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% block pagination %}
+            {% include "includes/pagination.html" %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

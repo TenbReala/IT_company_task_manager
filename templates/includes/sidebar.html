@@ -1,0 +1,73 @@
+{% load nav_tags %}
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
+    <div class="sidenav-header">
+      {% if user.is_authenticated %}
+        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+        <a class="navbar-brand m-0" href="{% url 'task_manager:worker-detail' pk=user.id %}">
+          <img src="{{ ASSETS_ROOT }}/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+          <span class="ms-1 font-weight-bold">{{ user.username }}</span>
+        </a>
+      {% else %}
+        <p>None</p>
+      {% endif %}
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link {% active_startswith request 'index' %}" href="{% url 'task_manager:index' %}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fas fa-chart-pie text-dark"></i>
+            </div>
+            <span class="nav-link-text ms-1">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_startswith request 'task' %}" href="{% url 'task_manager:task-list' %}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fas fa-tasks text-dark"></i>
+            </div>
+            <span class="nav-link-text ms-1">Tasks</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_startswith request 'project' %}" href="{% url 'task_manager:projects-list' %}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fa-solid fa-bars-progress text-dark"></i>
+            </div>
+            <span class="nav-link-text ms-1">Projects</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_startswith request 'team' %}" href="{% url 'task_manager:team-list' %}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fas fa-users text-dark"></i>
+            </div>
+            <span class="nav-link-text ms-1">Teams</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_startswith request 'worker-list' %}" href="{% url 'task_manager:worker-list' %}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="fas fa-user text-dark"></i>
+            </div>
+            <span class="nav-link-text ms-1">Workers</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          {% if user.is_authenticated %}
+            <a class="nav-link {% active_startswith request 'worker-detail' %}" href="{% url 'task_manager:worker-detail' pk=user.id %}">
+              <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-address-card text-dark"></i>
+              </div>
+              <span class="nav-link-text ms-1">Profile</span>
+            </a>
+          {% endif %} 
+        </li>
+      </ul>
+    </div>
+  </aside>

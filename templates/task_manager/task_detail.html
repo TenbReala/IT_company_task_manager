@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+  <title>Task: {{ task.name }}</title>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+              <h4 class="font-weight-bolder mb-1">{{ task.name }}</h4>
+              {% if not task.is_complete %}
+                <span class="badge bg-gradient-warning">In Progress</span>
+              {% else %}
+                <span class="badge bg-gradient-success">Completed</span>
+              {% endif %}
+            </div>
+            <div class="d-flex">
+              <a href="{% url 'task_manager:task-update' pk=task.id %}" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+              <button class="btn btn-sm btn-outline-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmModal"
+                      data-message="Delete task: {{ task.name }}?"
+                      data-action="{% url 'task_manager:task-delete' pk=task.id %}"
+                      data-btn-text="Yes, delete">
+                Delete
+              </button>
+            </div>
+          </div>
+
+          {% if task.deadline %}
+          <p class="text-sm text-muted mb-3">
+            <strong>Deadline:</strong> {{ task.deadline|date:"Y-m-d" }}
+          </p>
+          {% endif %}
+
+          {% if task.description %}
+          <p class="text-sm mb-4">
+            <strong>Description:</strong><br>
+            {{ task.description|linebreaksbr }}
+          </p>
+          {% endif %}
+
+          <div class="row">
+            {% if task.project %}
+              <div class="col-sm-6 mb-3">
+                <strong>Project:</strong><br>
+                <a href="{% url 'task_manager:project-detail' pk=task.project.id %}">
+                  {{ task.project.name }}
+                </a>
+              </div>
+            {% endif %}
+            <div class="col-sm-6 mb-3">
+              <strong>Assigned to:</strong><br>
+              {% for worker in task.assignees.all %}
+                <span class="badge bg-primary text-white">{{ worker.username }}</span>
+              {% empty %}
+                <em>No one assigned</em>
+              {% endfor %}
+            </div>
+            <div class="col-sm-6">
+              <strong>Task type:</strong><br>
+              {{ task.task_type.name }}
+            </div>
+            <div class="col-sm-6">
+              <strong>Tags:</strong><br>
+              {% for tag in task.tags.all %}
+                <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+              {% empty %}
+                <em>No tags</em>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

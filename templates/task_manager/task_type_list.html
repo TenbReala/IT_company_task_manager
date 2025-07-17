@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12 col-lg-10">
+      <div class="card">
+        <div class="card-header pb-0 p-3 d-flex justify-content-between">
+          <h6 class="mb-0">Task Types</h6>
+          <a href="{% url 'task_manager:task-type-create' %}" class="btn btn-sm btn-primary">Add Task Type</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-end pe-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for task_type in object_list %}
+              <tr>
+                <td class="align-middle">
+                  <a href="{% url 'task_manager:task-type-detail' pk=task_type.id %}" class="text-sm text-primary">{{ task_type.name }}</a>
+                </td>
+                <td class="text-end align-middle pe-4">
+                  <div class="btn-group" role="group">
+                    <a href="{% url 'task_manager:task-type-update' pk=task_type.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      data-bs-toggle="modal"
+                      data-bs-target="#confirmModal"
+                      data-message="Are you sure you want to delete '{{ task_type.name }}'?"
+                      data-action="{% url 'task_manager:task-type-delete' pk=task_type.id %}">
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% block pagination %}{% include "includes/pagination.html" %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
